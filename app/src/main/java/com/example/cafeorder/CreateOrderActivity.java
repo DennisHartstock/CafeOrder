@@ -23,7 +23,7 @@ public class CreateOrderActivity extends AppCompatActivity {
     private String name;
     private String password;
 
-    private StringBuilder stringBuilderAdditions;
+    private StringBuilder builderAdditions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class CreateOrderActivity extends AppCompatActivity {
         checkBoxLemon = findViewById(R.id.checkboxLemon);
         spinnerTea = findViewById(R.id.spinnerTea);
         spinnerCoffee = findViewById(R.id.spinnerCoffee);
-        stringBuilderAdditions = new StringBuilder();
+        builderAdditions = new StringBuilder();
     }
 
     public void onClickChangeDrink(View view) {
@@ -73,13 +73,15 @@ public class CreateOrderActivity extends AppCompatActivity {
     }
 
     public void onClickSendOrder(View view) {
-        stringBuilderAdditions.setLength(0);
+        builderAdditions.setLength(0);
         if (checkBoxMilk.isChecked()) {
-            stringBuilderAdditions.append(getString(R.string.milk)).append(" ");
-        } else if (checkBoxSugar.isChecked()) {
-            stringBuilderAdditions.append(getString(R.string.sugar)).append(" ");
-        } else if (checkBoxLemon.isChecked() && drink.equals(getString(R.string.tea))) {
-            stringBuilderAdditions.append(getString(R.string.lemon)).append(" ");
+            builderAdditions.append(getString(R.string.milk)).append(" ");
+        }
+        if (checkBoxSugar.isChecked()) {
+            builderAdditions.append(getString(R.string.sugar)).append(" ");
+        }
+        if (checkBoxLemon.isChecked() && drink.equals(getString(R.string.tea))) {
+            builderAdditions.append(getString(R.string.lemon)).append(" ");
         }
 
         String optionOfDrink;
@@ -91,14 +93,16 @@ public class CreateOrderActivity extends AppCompatActivity {
 
         String order = String.format(getString(R.string.order), name, password, drink, optionOfDrink);
 
-        String additions = "";
-        if (stringBuilderAdditions.length() > 0) {
-            additions = getString(R.string.need_additions) + stringBuilderAdditions.toString();
+        String additions;
+        if (builderAdditions.length() > 0) {
+            additions = getString(R.string.need_additions) + builderAdditions.toString();
+        } else {
+            additions = "";
         }
 
         String fullOrder = order + additions;
         Intent intent = new Intent(this, OrderDetailActivity.class);
-        intent.putExtra("fullOrder", fullOrder);
+        intent.putExtra("order", fullOrder);
         startActivity(intent);
     }
 }
